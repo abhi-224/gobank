@@ -1,0 +1,37 @@
+# Go binary files
+/bin/
+/bin/gobank
+
+# Go build cache
+*.out
+*.exe
+*.test
+*.so
+*.a
+
+# Vendor directory (if you're using Go modules, it’s usually not necessary to commit vendor files)
+/vendor/
+
+# Go modules
+go.sum
+go.mod
+
+# Log files
+*.log
+
+# Environment files (Docker, Kubernetes, etc.)
+.env
+
+# Docker-related files
+docker-compose.yml
+Dockerfile
+
+# IDE/editor-specific files (e.g., for Visual Studio Code, GoLand, etc.)
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Operating system files (macOS, Windows, Linux)
+.DS_Store
+Thumbs.db
