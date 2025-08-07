@@ -42,12 +42,12 @@ func (s *PostgresStore) Init() error {
 func (s *PostgresStore) createTable(name string) error {
 	ddl := fmt.Sprintf(`
 	CREATE TABLE IF NOT EXISTS %s (
-		id INT PRIMARY KEY NOT NULL,
+		id SERIAL PRIMARY KEY,
 		first_name VARCHAR(50),
 		last_name VARCHAR(50),
 		number INT NOT NULL UNIQUE,
 		balance NUMERIC(12, 2),
-		created_at TIMESTAMP
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 	);`, name)
 
 	_, err := s.db.Exec(ddl)
