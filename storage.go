@@ -55,7 +55,12 @@ func (s *PostgresStore) createTable(name string) error {
 }
 
 func (s *PostgresStore) CreateAccount(a *Account) error {
-	return nil
+	return s.db.QueryRow(`
+	INSERT INTO accounts(first_name, last_name, number, balance)
+	VALUES ($1, $2, $3, $4)
+	RETURNING id;
+	`, a.FirstName, a.LastName, a.Number, a.Balance).Scan(&a.Id)
+
 }
 
 func (s *PostgresStore) GetAccountById(id int) error {
