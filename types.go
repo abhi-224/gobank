@@ -2,7 +2,6 @@ package main
 
 import (
 	"math/rand/v2"
-	"time"
 )
 
 type CreateAccountRequest struct {
@@ -11,21 +10,17 @@ type CreateAccountRequest struct {
 }
 
 type Account struct {
-	Id        int       `json:"id"`
-	FirstName string    `json:"firstName"`
-	LastName  string    `json:"lastName"`
-	Number    int       `json:"accountNumber"`
-	Balance   float64   `json:"balance"`
-	CreatedAt time.Time `json:"createdAt"`
+	Id        int     `json:"id"`
+	FirstName string  `json:"firstName"`
+	LastName  string  `json:"lastName"`
+	Number    int     `json:"accountNumber"`
+	Balance   float64 `json:"balance"`
 }
 
 func NewAccount(firstName, lastName string) *Account {
 	return &Account{
-
-		Id:        int(time.Now().UnixMilli()),
 		FirstName: firstName,
 		LastName:  lastName,
 		Number:    rand.IntN(1000000),
-		CreatedAt: time.Now(),
 	}
 }

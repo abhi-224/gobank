@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -42,25 +43,37 @@ func (s *ApiServer) Run() {
 func (s *ApiServer) handleCreateAccount(w http.ResponseWriter, r *http.Request) error {
 	createAccReq := new(CreateAccountRequest)
 	if err := json.NewDecoder(r.Body).Decode(createAccReq); err != nil {
-		return WriteJson(w, http.StatusBadRequest, err.Error())
+		return fmt.Errorf("bad request - invalid request body")
 	}
+	defer r.Body.Close()
 
 	acc := NewAccount(createAccReq.FirstName, createAccReq.LastName)
 	if err := s.store.CreateAccount(acc); err != nil {
-		return WriteJson(w, http.StatusInternalServerError, err.Error())
+		return err
 	}
 	return WriteJson(w, http.StatusCreated, acc)
 }
 
 func (s *ApiServer) handleGetAccount(w http.ResponseWriter, r *http.Request) error {
-	fmt.Println("GET method called on /accounts endpoint")
-	account := NewAccount("Abhishek", "Shrestha")
-	return WriteJson(w, http.StatusOK, account)
+	accounts, err := s.store.GetAccount()
+	if err != nil {
+		return err
+	}
+
+	return WriteJson(w, http.StatusOK, accounts)
 }
 func (s *ApiServer) handleGetAccountById(w http.ResponseWriter, r *http.Request) error {
-	fmt.Println("GET method called on /accounts/{id} endpoint")
-	account := NewAccount("Abhishek", "Shrestha")
-	return WriteJson(w, http.StatusOK, account)
+	id, err := strconv.Atoi(mux.Vars(r)["id"])
+	if err != nil {
+		return fmt.Errorf("bad request - unparseable id")
+	}
+
+	acc, err := s.store.GetAccountById(id)
+	if err != nil {
+		return err
+	}
+
+	return WriteJson(w, http.StatusOK, acc)
 }
 func (s *ApiServer) handleDeleteAccount(w http.ResponseWriter, r *http.Request) error {
 	fmt.Println("DELETE method called on /accounts endpoint")
