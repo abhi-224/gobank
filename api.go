@@ -26,7 +26,7 @@ func (s *ApiServer) Run() {
 
 	accountRouter := router.PathPrefix("/accounts").Subrouter()
 	accountRouter.HandleFunc("", makeHttpHandleFunc(s.handleCreateAccount)).Methods("POST")
-	accountRouter.HandleFunc("", makeHttpHandleFunc(s.handleGetAccount)).Methods("GET")
+	accountRouter.HandleFunc("", withJwt(makeHttpHandleFunc(s.handleGetAccount))).Methods("GET")
 	accountRouter.HandleFunc("/{id}", makeHttpHandleFunc(s.handleGetAccountById)).Methods("GET")
 	accountRouter.HandleFunc("", makeHttpHandleFunc(s.handleDeleteAccount)).Methods("DELETE")
 
@@ -51,6 +51,12 @@ func (s *ApiServer) handleCreateAccount(w http.ResponseWriter, r *http.Request) 
 	if err := s.store.CreateAccount(acc); err != nil {
 		return err
 	}
+	token, err := createJwt(acc)
+	if err != nil {
+		return err
+	}
+
+	log.Printf("signed jwt %v", token)
 	return WriteJson(w, http.StatusCreated, acc)
 }
 
