@@ -53,9 +53,12 @@ func (s *ApiServer) handleCreateAccount(w http.ResponseWriter, r *http.Request) 
 }
 
 func (s *ApiServer) handleGetAccount(w http.ResponseWriter, r *http.Request) error {
-	fmt.Println("GET method called on /accounts endpoint")
-	account := NewAccount("Abhishek", "Shrestha")
-	return WriteJson(w, http.StatusOK, account)
+	accounts, err := s.store.GetAccount()
+	if err != nil {
+		return WriteJson(w, http.StatusInternalServerError, err.Error())
+	}
+
+	return WriteJson(w, http.StatusOK, accounts)
 }
 func (s *ApiServer) handleGetAccountById(w http.ResponseWriter, r *http.Request) error {
 	fmt.Println("GET method called on /accounts/{id} endpoint")
