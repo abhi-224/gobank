@@ -10,6 +10,7 @@ import (
 type Storage interface {
 	CreateAccount(*Account) error
 	GetAccountById(int) error
+	GetAccount() error
 	UpdateAccount(*Account) error
 	DeleteAccount(int) error
 }
@@ -66,6 +67,11 @@ func (s *PostgresStore) CreateAccount(a *Account) error {
 func (s *PostgresStore) GetAccountById(id int) error {
 	return nil
 }
+
+func (s *PostgresStore) GetAccount() error {
+	return nil
+}
+
 func (s *PostgresStore) UpdateAccount(a *Account) error {
 	return nil
 }
